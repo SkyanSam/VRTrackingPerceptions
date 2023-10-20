@@ -3,12 +3,12 @@ using HP.Omnicept.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GazeBehaviour : MonoBehaviour
 {
-    public Canvas canvas;
-    public GameObject gazePointer;
-    public TMPro.TextMeshProUGUI[] textMeshPro;
+    public float raycastMaxDistance;
+    public Camera cam;
     private GliaBehaviour _gliaBehaviour = null;
     private GliaBehaviour gliaBehaviour
     {
@@ -31,15 +31,15 @@ public class GazeBehaviour : MonoBehaviour
     // Update is called once per frame.
     void Update()
     {
-        
         Debug.Log(gaze);
-        foreach (var i in textMeshPro)
-        {
-            i.text = $"{Mathf.Round(gaze.x * 100) / 100}, {Mathf.Round(gaze.y * 100) / 100}, {Mathf.Round(gaze.z * 100) / 100}";
-            Vector2 position;
-            position.x = gaze.x * canvas.GetComponent<RectTransform>().rect.width / 2;
-            position.y = gaze.y * canvas.GetComponent<RectTransform>().rect.height / 2;
-            i.GetComponent<RectTransform>().anchoredPosition3D = position;
+        RaycastHit hit;
+        var isHit = Physics.Raycast(new Ray(cam.transform.position, cam.transform.rotation * gaze), out hit, raycastMaxDistance, LayerMask.GetMask("EyeTracking"));
+        //Gizmos.DrawLine(cam.transform.position, cam.transform.rotation * gaze);
+        if (isHit) {
+            print("HIT SUCCESSFUL");
+            var color = hit.collider.GetComponent<MeshRenderer>().material.color;
+            color = Vector4.MoveTowards(color, UnityEngine.Color.red, Time.deltaTime);
+            hit.collider.GetComponent<MeshRenderer>().material.color = color;
         }
     }
     public void CalculateGaze(EyeTracking eyeTracking)
@@ -48,7 +48,5 @@ public class GazeBehaviour : MonoBehaviour
             -eyeTracking.CombinedGaze.X,
             eyeTracking.CombinedGaze.Y,
             eyeTracking.CombinedGaze.Z);
-        //Gizmos.DrawSphere(gaze, 5f);
-        gazePointer.transform.position = new Vector3(0, 1, 0) + (gaze);
     }
 }
