@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>PuppeteerSharp</id>
+    <version>12.0.0</version>
+    <title>PuppeteerSharp</title>
+    <authors>Darío Kondratiuk</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/hardkoded/puppeteer-sharp</projectUrl>
+    <description>Headless Browser .NET API</description>
+    <tags>headless,chrome,puppeteer</tags>
+    <repository type="git" url="https://github.com/hardkoded/puppeteer-sharp" commit="a2a0f9c3b43cf498cf5ae2c8f902c79ddc018ea0" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.Bcl.AsyncInterfaces" version="1.1.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="2.0.2" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Encodings.Web" version="6.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
