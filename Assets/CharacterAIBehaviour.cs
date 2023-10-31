@@ -5,6 +5,7 @@ using CharacterAI;
 using UnityEngine.Windows.Speech;
 using System.Linq;
 using System.Net;
+using Microsoft.CSharp;
 
 public class CharacterAIBehaviour : MonoBehaviour
 {
