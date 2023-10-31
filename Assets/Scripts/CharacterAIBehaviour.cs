@@ -4,6 +4,7 @@ using UnityEngine;
 using CharacterAI;
 using System;
 using System.Threading.Tasks;
+using System.Runtime.Remoting.Messaging;
 
 public class CharacterAIBehaviour : MonoBehaviour
 {
@@ -11,20 +12,26 @@ public class CharacterAIBehaviour : MonoBehaviour
     public string characterId = "_CHARACTER_ID_";
     CharacterAIClient client;
     CharacterAI.Models.Character character;
+    public static List<CharacterAIBehaviour> instances = new List<CharacterAIBehaviour>();
     string historyId;
     public void Start()
     {
-        ConnectToCharacterAI(authToken).Start();
+        instances.Add(this);
+        Task.Run(() => ConnectToCharacterAI(authToken).Start());
+    }
+    public static void CallOnSpeechToTextRecognized(string text)
+    {
+        foreach (var instance in instances) instance.OnSpeechToTextRecognized(text);
     }
     public void OnSpeechToTextRecognized(string text)
     {
         // (!) Note to add condition of if the player is within close enough distance to the character.
-        SendAndRecieveMessage(text).Start();
+        Task.Run(() => SendAndRecieveMessage(text).Start());
     }
     async Task ConnectToCharacterAI(string token)
     {
         client = new CharacterAIClient(token);
-
+        print(client);
         // Launch Puppeteer headless browser
         client.LaunchBrowser(killDuplicates: true);
 
@@ -38,9 +45,11 @@ public class CharacterAIBehaviour : MonoBehaviour
         if (historyId is null)
         {
             return;
+            
         }
     }
-    async Task SendAndRecieveMessage(string _message) {
+    async Task SendAndRecieveMessage(string _message)
+    {
         var characterResponse = await client.CallCharacterAsync(
             characterId: character.Id,
             characterTgt: character.Tgt,
@@ -50,7 +59,7 @@ public class CharacterAIBehaviour : MonoBehaviour
 
         if (!characterResponse.IsSuccessful)
         {
-            Console.WriteLine(characterResponse.ErrorReason);
+            Debug.Log(characterResponse.ErrorReason);
             return;
         }
 
@@ -77,7 +86,6 @@ public class CharacterAIBehaviour : MonoBehaviour
             primaryMsgUuId: characterMessageUuid // (!)
         );
 
-        Console.WriteLine("CHARACTERAI MESSAGE : " + message);
+        Debug.Log("CHARACTERAI MESSAGE : " + message);
     }
 }
-

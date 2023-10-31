@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &594463401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   authToken: 614b7e6332dacad0cd9b84c79ecf521889e62af2
-  characterId: zCWvCsHfDQWYEqLkLao0xqkqcmA735XYFW3OArYj3mw
+  characterId: OYYf4iM6fjt9eZ72oXRsY3UGPeXd9Y-uJwfAjF5JAwk
 --- !u!4 &594463402
 Transform:
   m_ObjectHideFlags: 0

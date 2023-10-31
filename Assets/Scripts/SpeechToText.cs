@@ -18,69 +18,59 @@ public class SpeechToText : MonoBehaviour
     static SpeechConfig speechConfig;
     static AudioConfig audioConfig;
     static SpeechRecognizer speechRecognizer;
-    static TaskCompletionSource<int> stopRecognition;
-    async static Task StartSpeech()
+    void StartSpeech()
     {
-        print("begin startspeech()");
         speechConfig = SpeechConfig.FromSubscription(Instance.speechKey, Instance.speechRegion);
-        print(speechConfig);
-        print("begin audioconfig");
         audioConfig = AudioConfig.FromDefaultMicrophoneInput();
-        print("init vars");
         speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
-        stopRecognition = new TaskCompletionSource<int>();
-        print("Running start speech");
+
         speechRecognizer.Recognizing += (s, e) =>
         {
-            Console.WriteLine($"RECOGNIZING: Text={e.Result.Text}");
+            //Debug.Log($"RECOGNIZING: Text={e.Result.Text}");
         };
 
         speechRecognizer.Recognized += (s, e) =>
         {
             if (e.Result.Reason == ResultReason.RecognizedSpeech)
             {
-                Console.WriteLine($"RECOGNIZED: Text={e.Result.Text}");
-                Instance.BroadcastMessage("OnSpeechToTextRecognized", e.Result.Text);
+                Debug.Log($"RECOGNIZED: Text={e.Result.Text}");
+                CharacterAIBehaviour.CallOnSpeechToTextRecognized(e.Result.Text);
             }
             else if (e.Result.Reason == ResultReason.NoMatch)
             {
-                Console.WriteLine($"NOMATCH: Speech could not be recognized.");
+                Debug.Log($"NOMATCH: Speech could not be recognized.");
             }
         };
 
         speechRecognizer.Canceled += (s, e) =>
         {
-            Console.WriteLine($"CANCELED: Reason={e.Reason}");
+            Debug.Log($"CANCELED: Reason={e.Reason}");
 
             if (e.Reason == CancellationReason.Error)
             {
-                Console.WriteLine($"CANCELED: ErrorCode={e.ErrorCode}");
-                Console.WriteLine($"CANCELED: ErrorDetails={e.ErrorDetails}");
-                Console.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
+                Debug.Log($"CANCELED: ErrorCode={e.ErrorCode}");
+                Debug.Log($"CANCELED: ErrorDetails={e.ErrorDetails}");
+                Debug.Log($"CANCELED: Did you set the speech resource key and region values?");
             }
-
-            stopRecognition.TrySetResult(0);
         };
 
         speechRecognizer.SessionStopped += (s, e) =>
         {
-            Console.WriteLine("\n    Session stopped event.");
-            stopRecognition.TrySetResult(0);
+            Debug.Log("\nSession stopped event.");
         };
 
-        await speechRecognizer.StartContinuousRecognitionAsync();
-
-        // Waits for completion. Use Task.WaitAny to keep the task rooted.
-        Task.WaitAny(new[] { stopRecognition.Task });
+        speechRecognizer.StartContinuousRecognitionAsync();
+        print("It worked?");
+        print(speechRecognizer);
     }
-    async static void StopSpeech()
+    void StopSpeech()
     {
-        await speechRecognizer.StopContinuousRecognitionAsync();
+        speechRecognizer.StopContinuousRecognitionAsync();
     }
     private void Start()
     {
         Instance = this;
-        StartSpeech().Start();
+        StartSpeech();
     }
     private void Update()
     {
