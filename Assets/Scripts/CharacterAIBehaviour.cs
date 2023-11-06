@@ -87,5 +87,6 @@ public class CharacterAIBehaviour : MonoBehaviour
         );
 
         Debug.Log("CHARACTERAI MESSAGE : " + message);
+        TextToSpeech.Instance.Speak(message);
     }
 }
