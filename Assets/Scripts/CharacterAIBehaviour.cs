@@ -50,6 +50,7 @@ public class CharacterAIBehaviour : MonoBehaviour
     }
     async Task SendAndRecieveMessage(string _message)
     {
+        print("sending message " + _message);
         var characterResponse = await client.CallCharacterAsync(
             characterId: character.Id,
             characterTgt: character.Tgt,
