@@ -36,8 +36,10 @@ public class TextToSpeech : MonoBehaviour
     }
     async Task SynthesizeAudio(string message)
     {
+        print("Synthesizing " + message);
         string date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.ffffffK");
-        string path = Application.streamingAssetsPath + $"voice{date}.wav";
+        string path = Application.streamingAssetsPath + $"/voice{Time.time}.wav";
+        print(path);
         using var audioConfig = AudioConfig.FromWavFileOutput(path);
         using var speechSynthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
         await speechSynthesizer.SpeakTextAsync(message);
