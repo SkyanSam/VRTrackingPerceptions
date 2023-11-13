@@ -7,7 +7,7 @@ public class OculusEyeTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OculusEyeTracking.
+        //OculusEyeTracking.
     }
 
     // Update is called once per frame
